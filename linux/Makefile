@@ -277,6 +277,10 @@ fw900/payload-900-3gb-pro.elf: ../lib/lib.a main.c ps4-kexec-900-pro/kexec.bin
 fw900/payload-900-4gb-pro.elf: ../lib/lib.a main.c ps4-kexec-900-pro/kexec.bin
 	gcc -isystem ../freebsd-headers -nostdinc -nostdlib -fno-stack-protector -static ../lib/lib.a -D__9_00__ -DPS4_9_00 -DVRAM_GB_DEFAULT=4 main.c -Wl,-gc-sections -o fw900/payload-900-4gb-pro.elf -fPIE -ffreestanding
 
+fw900/payload-900-5gb-pro.elf: ../lib/lib.a main.c ps4-kexec-900-pro/kexec.bin
+	gcc -isystem ../freebsd-headers -nostdinc -nostdlib -fno-stack-protector -static ../lib/lib.a -D__9_00__ -DPS4_9_00 -DVRAM_GB_DEFAULT=5 main.c -Wl,-gc-sections -o fw900/payload-900-5gb-pro.elf -fPIE -ffreestanding
+
+
 ps4-kexec-900-baikal/kexec.bin:
 	cd ps4-kexec-900-baikal; make
 

@@ -18,11 +18,14 @@ def get_sony_syscalls():
     #cli = http.client.HTTPSConnection('www.psdevwiki.com')
     #cli.request('GET', '/ps4/edit/Syscalls')
     #r = cli.getresponse()
-    r = urllib.request.urlopen('http://web.archive.org/web/20210124215126js_/https://psdevwiki.com/ps4/edit/Syscalls')
-    data = html.unescape(r.read().decode('latin-1').split('<textarea ', 1)[1].split('</textarea>', 1)[0])
+    #r = urllib.request.urlopen('http://web.archive.org/web/20210124215126js_/https://psdevwiki.com/ps4/edit/Syscalls')
+    with open("syscalls-local.html", "r", encoding="latin-1") as f:
+        contents = f.read()
+
+    data = html.unescape(contents.split('<textarea ', 1)[1].split('</textarea>', 1)[0])
     ans = {}
     for i in data.split('\n'):
-        if i.startswith('| '):
+        if i.startswith('|'):
             try:
                 syscno, fw, syscname, proto, notes = i[2:].split(' || ')
                 syscno = int(syscno)

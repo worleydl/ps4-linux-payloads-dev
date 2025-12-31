@@ -153,9 +153,20 @@ static void setup_mtrr(void)
     // High memory (8GB-10GB) = WB
     wrmsr(MTRR_BASE(2), 0x0200000006);
     wrmsr(MTRR_MASK(2), 0xff80000800);
-    // VRAM (4GB-4GB+vram_size) = UC
-    wrmsr(MTRR_BASE(3), 0x0100000000);
-    wrmsr(MTRR_MASK(3), (0xffffffffff - vram_gb * vram_size + 1) | 0x800);
+
+    if (vram_gb > 4) {
+        // Range 1: 4GB to 8GB (Base 4GB, Size 4GB) = UC (Uncacheable)
+        wrmsr(MTRR_BASE(3), 0x0100000000);
+        wrmsr(MTRR_MASK(3), 0xff00000800);
+
+        // Range 2: 8GB to 9GB (Base 8GB, Size 1GB) = UC
+        wrmsr(MTRR_BASE(4), 0x0200000000);
+        wrmsr(MTRR_MASK(4), 0xffc0000800);
+    } else {
+        // VRAM (4GB-4GB+vram_size) = UC
+        wrmsr(MTRR_BASE(3), 0x0100000000);
+        wrmsr(MTRR_MASK(3), (0xffffffffff - vram_gb * vram_size + 1) | 0x800);
+    }
 
     wbinvd();
     cr3_write(cr3_read()); // TLB flush
